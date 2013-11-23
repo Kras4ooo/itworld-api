@@ -51,15 +51,32 @@ class DumpITWorld(object):
             response = self.create_request(self.itworld+article_link)
             title = response.find_all('h1', {"id": "article-title"})
             page_counter = response.find_all('div', {"class": "links"})
-            
+            article_info = response.find_all('div', {"id": "article-content"})
+
             if page_counter:
-                continue
+                article_info.append(self.get_continue_article(page_counter))
             
             title_articles.append(title[0])
-            article_info = response.find_all('div', {"id": "article-content"})
             articles_info.append(article_info[0])
             
         return articles_data
+    
+    def get_continue_article(self, div_links):
+        link = div_links[0].find_all('li', {'class': 'pager-next'})
+        link = link[0].find_all('a', href=True)
+        response = self.create_request(self.itworld+link[0]['href'])
+        content = ""
+        
+        article_info = response.find_all('div', {"id": "article-content"})
+        page_counter = response.find_all('li', {'class': 'pager-next'})
+        
+        if page_counter:
+            content = self.get_continue_article(page_counter)
+        
+        if content:
+            article_info[0] += content
+        
+        return article_info[0]
     
     def get_clean_articles(self, num_articles=None):
         articles_data = self.get_content_articles(self.get_link_articles(), num_articles)
