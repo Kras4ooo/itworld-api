@@ -1,0 +1,12 @@
+*.gz
+*.sql
+*.mysql
+*.zip
+*.swp
+*._*
+*.py[oc]
+*.mwb.bak
+.project
+.pydevproject
+.python-version
+Makefile
