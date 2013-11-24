@@ -66,7 +66,6 @@ class DumpITWorld(object):
             
             if counter == num_articles:
                 break
-            
             response = self.create_request(self.itworld(article_link))
             title = response.find_all('h1', {"id": "article-title"})
             page_counter = response.find_all('div', {"class": "links"})
@@ -144,8 +143,46 @@ class DumpITWorld(object):
         
         return populate_titles
     
-    def get_populate_articles(self, num_articles, ):
+    def __get_only_links(self, likes_and_links):
+        """
+        Get only links from popular articles
+        """
+        populate_links = []
+        for like, titles in likes_and_links:
+            populate_links.append(titles)
+        
+        return populate_links
+    
+    def __get_populate_links(self, num_links=None, reverse=False):
+        """
+        Get populate links
+        """
+        list_with_articles = self.response.find_all('ul', {"class": "tp-list" })
+        links = []
+        fb_likes = []
+        for counter, article in enumerate(list_with_articles):
+            if num_links == counter:
+                break 
+            for title in article.find_all('h3', {"class": "title"}):
+                for title_link in title.find_all('a', href=True):
+                    links.append(title_link['href'])
+                    fb_likes.append(SocialUtils().counter_likes(self.itworld(title_link['href']))['shares'])
+        
+        links = zip(fb_likes, links)
+        if reverse:
+            links.sort(reverse=True)
+        else:
+            links.sort()
+        links = self.__get_only_links(links)
+        return links
+    
+    def get_popular_articles(self, num_articles=None, reverse=False):
         """
         Get popular articles (titles, content)
         """
-        pass
+        sort_links = self.__get_populate_links(num_articles, reverse)
+        articles_titles = self.get_content_articles(sort_links, num_articles)
+        articles = articles_titles['articles_info']
+        titles = articles_titles['title_articles']
+        merge_title_info = zip(titles, articles)
+        return merge_title_info
