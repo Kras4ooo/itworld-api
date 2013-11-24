@@ -20,10 +20,12 @@ class DumpITWorld(object):
         soup = BeautifulSoup(html, "lxml")
         return soup
     
-    def get_title_articles(self):
+    def get_title_articles(self, num_titles=None):
         titles = []
         list_with_articles = self.response.find_all('ul', {"class": "tp-list" })
-        for article in list_with_articles:
+        for counter, article in enumerate(list_with_articles):
+            if num_titles == counter:
+                break 
             for title in article.find_all('h3', {"class": "title"}):
                 titles.append(title.text)
 
@@ -54,7 +56,7 @@ class DumpITWorld(object):
             article_info = response.find_all('div', {"id": "article-content"})
 
             if page_counter:
-                article_info.append(self.get_continue_article(page_counter))
+                article_info[0].append(self.get_continue_article(page_counter))
             
             title_articles.append(title[0])
             articles_info.append(article_info[0])
@@ -74,7 +76,7 @@ class DumpITWorld(object):
             content = self.get_continue_article(page_counter)
         
         if content:
-            article_info[0] += content
+            article_info[0].append(content)
         
         return article_info[0]
     
