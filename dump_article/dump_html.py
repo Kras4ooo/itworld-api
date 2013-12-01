@@ -1,7 +1,7 @@
 import load_libs
 from bs4 import BeautifulSoup
 from urllib2 import urlopen
-from dump_article.social_utils import SocialUtils
+from dump_article.social_utils import SocialUtilsNew
 
 
 class DumpITWorld(object):
@@ -123,7 +123,7 @@ class DumpITWorld(object):
             for title in article.find_all('h3', {"class": "title"}):
                 for title_link in title.find_all('a', href=True):
                     titles.append(title.text)
-                    fb_likes.append(SocialUtils().counter_likes(self.itworld(title_link['href']))['shares'])
+                    fb_likes.append(SocialUtilsNew().counter_likes(self.itworld(title_link['href']))['Facebook']['like_count'])
         articles_title = zip(fb_likes, titles)
         if reverse:
             articles_title.sort(reverse=True)
@@ -166,7 +166,7 @@ class DumpITWorld(object):
             for title in article.find_all('h3', {"class": "title"}):
                 for title_link in title.find_all('a', href=True):
                     links.append(title_link['href'])
-                    fb_likes.append(SocialUtils().counter_likes(self.itworld(title_link['href']))['shares'])
+                    fb_likes.append(SocialUtilsNew().counter_likes(self.itworld(title_link['href']))['Facebook']['like_count'])
         
         links = zip(fb_likes, links)
         if reverse:
