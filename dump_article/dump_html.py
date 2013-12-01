@@ -84,12 +84,16 @@ class DumpITWorld(object):
         Get content from other pages on current article
         """
         link = div_links[0].find_all('li', {'class': 'pager-next'})
+        next_link = link
+        if not next_link:
+            return ""
         link = link[0].find_all('a', href=True)
+        
         response = self.create_request(self.itworld(link[0]['href']))
         content = ""
         
         article_info = response.find_all('div', {"id": "article-content"})
-        page_counter = response.find_all('li', {'class': 'pager-next'})
+        page_counter = response.find_all('div', {'class': 'links'})
         
         if page_counter:
             content = self.__get_continue_article(page_counter)
