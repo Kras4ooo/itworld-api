@@ -1,9 +1,6 @@
 import json
 import urllib2
 
-'''
-Old Type
-
 class SocialUtils(object):
 
     def counter_likes(self, link):
@@ -26,37 +23,14 @@ class SocialUtils(object):
         """
         return json.loads(response)
         
-    
+    '''
     def create_link(self, link):
         """ 
         Create encode link
         """ 
         original_link = "http://social-count.eu01.aws.af.cm/%s" % link
         return original_link
-
-'''
-    
-class SocialUtilsNew(object):
-    """
-    New Type
-    """
-    
-    def counter_likes(self, link):
-        """
-        Get Facebook, Twitter and Google+ counter likes
-        Twitter - get twitter likes
-        Facebook - get facebook likes
-        ......
-        """
-        response = urllib2.build_opener().open(self.create_link(link)).read()
-        common_likes = self.counter_parse(response)
-        return common_likes
-    
-    def counter_parse(self, response):
-        """
-        Parse JSON and get link count
-        """
-        return json.loads(response)
+    '''
     
     def create_link(self, link):
         """ 
